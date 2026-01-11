@@ -1,4 +1,5 @@
 import collections
+import os
 from typing import List
 
 import xmlschema
@@ -21,7 +22,10 @@ class TypeTree:
                      'xs:string+', 'xs:anySimpleType']
 
     def __init__(self, schema_file: str, namespace: str):
-        self._schema = xmlschema.XMLSchema(source=schema_file)
+        # Extract the directory containing the schema file to use as base_url
+        # This ensures that relative paths in xs:import and xs:include are resolved correctly
+        schema_dir = os.path.dirname(os.path.abspath(schema_file))
+        self._schema = xmlschema.XMLSchema(source=schema_file, base_url=schema_dir)
         self._all_types = TypeTree.extract_all_types(self._schema.maps.types.values())
         TypeTree.update_derivations(self._all_types)
 

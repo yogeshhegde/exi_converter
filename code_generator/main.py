@@ -49,7 +49,9 @@ if __name__ == '__main__':
         print(f"creating directory {args.output_path}")
         os.mkdir(args.output_path)
 
-    tt = TypeTree(schema_file=os.path.join(args.schema_file), namespace=args.namespace)
+    # Convert schema file path to absolute path to ensure proper resolution
+    schema_file_path = os.path.abspath(args.schema_file)
+    tt = TypeTree(schema_file=schema_file_path, namespace=args.namespace)
 
     if args.create_base_types:
         # write a header file describing basic types which are used by generated code
