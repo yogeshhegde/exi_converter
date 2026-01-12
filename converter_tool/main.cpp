@@ -1,4 +1,6 @@
 #include <vector>
+#include <sstream>
+#include <iomanip>
 #include "library.h"
 
 int char2int(char input) {
@@ -20,6 +22,14 @@ std::vector<uint8_t> hex2bin(const char* src) {
         src += 2;
     }
     return output;
+}
+
+std::string bin2hex(const std::vector<uint8_t> & src_data) {
+    std::ostringstream out_str;
+    for (const auto & data : src_data) {
+        out_str << std::setfill('0') << std::setw(2) << std::right << std::hex << static_cast<int>(data);
+    }
+    return out_str.str();
 }
 
 void printUsage() {
@@ -46,9 +56,10 @@ int main(int argc, char *argv[]) {
 
         std::cout << output << std::endl;
         return 0;
-    } else if (std::string(argv[1]) == "encode") {
-        char* byte_stream = (char*)"BYTE_STREAM_AS_STRING";
-        tmp.encode("json", "namespace");
+    } else if (std::string(argv[1]) == "encode") {       
+        auto bindata = tmp.encode(std::string(argv[2]), std::string(argv[3]));
+        std::string output_str = bin2hex(bindata);
+        std::cout << output_str << std::endl;
         return 0;
     }
 
